@@ -23,4 +23,4 @@ TODO
       -e SERVICE_NAME="{{.Service.Name}}" \
       -e TASK_SLOT="{{.Task.Slot}}" \
       --hostname="couchdb{{.Task.Slot}}" \
-      redgeoff/couchdb
+      redgeoff/couchdb-service
