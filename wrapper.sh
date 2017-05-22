@@ -18,9 +18,9 @@ if [ $status -ne 0 ]; then
   exit $status
 fi
 
-# Start the set-up process in the foreground after the couchdb1 is ready. We expect this process to
+# Start the set-up process in the foreground after the DBs are ready. We expect this process to
 # complete and then the script will continue on and monitor the other 2 processes.
-/wait-for-it.sh couchdb1:5984 -t 300 -- /set-up-process.sh
+/set-up-process.sh
 
 # Naive check runs checks once a minute to see if either of the processes exited. The container will
 # exit with an error
