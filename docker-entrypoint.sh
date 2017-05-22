@@ -14,7 +14,7 @@ if [ "$1" = '/home/couchdb/couchdb/bin/couchdb' ]; then
 		fi
 	fi
 
-	if [ "$COUCHDB_USER" ] && [ "$COUCHDB_PASSWORD" ] && [ -z "$COUCHDB_SYNC_ADMINS_NODE" ]; then
+	if [ "$COUCHDB_USER" ] && [ "$COUCHDB_PASSWORD" ] && [ -z "$COUCHDB_HASHED_PASSWORD" ]; then
 		# Create admin
 		printf "[admins]\n%s = %s\n" "$COUCHDB_USER" "$COUCHDB_PASSWORD" > /home/couchdb/couchdb/etc/local.d/docker.ini
 		chown couchdb:couchdb /home/couchdb/couchdb/etc/local.d/docker.ini

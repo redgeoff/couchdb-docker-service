@@ -47,11 +47,24 @@ COPY ./docker-entrypoint.sh /
 RUN mkdir /home/couchdb/couchdb/data /home/couchdb/couchdb/etc/default.d \
   && chown -R couchdb:couchdb /home/couchdb/couchdb/
 
+# Install nodejs
+RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - \
+  && apt-get install -y nodejs \
+  && npm install npm -g
+
+# docker-discover-tasks helps the nodes discover each other
+RUN npm install -g docker-discover-tasks
+
 WORKDIR /home/couchdb/couchdb
 
 EXPOSE 5984 4369 9100-9200
 
 VOLUME ["/home/couchdb/couchdb/data"]
 
-ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
-CMD ["/home/couchdb/couchdb/bin/couchdb"]
+COPY couchdb-process.sh /couchdb-process.sh
+COPY discover-process.sh /discover-process.sh
+COPY set-up-process.sh /set-up-process.sh
+COPY wait-for-it.sh /wait-for-it.sh
+COPY wrapper.sh /wrapper.sh
+
+CMD ["/wrapper.sh"]
