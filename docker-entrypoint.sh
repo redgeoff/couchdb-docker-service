@@ -31,6 +31,13 @@ if [ "$1" = '/home/couchdb/couchdb/bin/couchdb' ]; then
 		chown couchdb:couchdb /home/couchdb/couchdb/etc/local.d/secret.ini
 	fi
 
+	if [ "$COUCHDB_CERT_FILE" ] && [ "$COUCHDB_KEY_FILE" ] && [ "$COUCHDB_CACERT_FILE" ]; then
+		# Enable SSL
+		# printf "[daemons]\nhttpsd = {couch_httpd, start_link, [https]}\n\n" >> /home/couchdb/couchdb/etc/local.d/ssl.ini
+		printf "[ssl]\ncert_file = %s\nkey_file = %s\ncacert_file = %s\n" "$COUCHDB_CERT_FILE" "$COUCHDB_KEY_FILE" "$COUCHDB_CACERT_FILE" >> /home/couchdb/couchdb/etc/local.d/ssl.ini
+		chown couchdb:couchdb /home/couchdb/couchdb/etc/local.d/ssl.ini
+	fi
+
 	exec gosu couchdb "$@"
 fi
 

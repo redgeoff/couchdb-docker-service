@@ -41,8 +41,6 @@ RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364
 COPY local.ini /home/couchdb/couchdb/etc/local.d/
 COPY vm.args /home/couchdb/couchdb/etc/
 
-COPY ./docker-entrypoint.sh /
-
 # Setup directories and permissions
 RUN mkdir /home/couchdb/couchdb/data /home/couchdb/couchdb/etc/default.d \
   && chown -R couchdb:couchdb /home/couchdb/couchdb/
@@ -63,7 +61,9 @@ VOLUME ["/home/couchdb/couchdb/data"]
 
 COPY couchdb-process.sh /couchdb-process.sh
 COPY discover-process.sh /discover-process.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY set-up-process.sh /set-up-process.sh
+COPY wait-for-host.sh /wait-for-host.sh
 COPY wait-for-it.sh /wait-for-it.sh
 COPY wrapper.sh /wrapper.sh
 

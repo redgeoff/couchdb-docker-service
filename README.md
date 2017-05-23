@@ -13,7 +13,8 @@ TODO
       couchdb-network
 
     docker service create --replicas 2 --name couchdb --network couchdb-network \
-      -p 5984:5984 \
+      --hostname="couchdb{{.Task.Slot}}" \
+      --mount type=bind,source=/home/ubuntu/common,destination=/common \
       -e COUCHDB_COOKIE="mycookie" \
       -e COUCHDB_USER="admin" \
       -e COUCHDB_PASSWORD="admin" \
@@ -22,5 +23,8 @@ TODO
       -e NODENAME="{{.Service.Name}}{{.Task.Slot}}" \
       -e SERVICE_NAME="{{.Service.Name}}" \
       -e TASK_SLOT="{{.Task.Slot}}" \
-      --hostname="couchdb{{.Task.Slot}}" \
+      -e COUCHDB_CERT_FILE="/common/mydomain.crt" \
+      -e COUCHDB_KEY_FILE="/common/mydomain.key" \
+      -e COUCHDB_CACERT_FILE="/common/mydomain.crt" \
+      -p 6984:6984 \
       redgeoff/couchdb-service
