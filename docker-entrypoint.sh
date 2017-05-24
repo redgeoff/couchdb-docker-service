@@ -33,8 +33,14 @@ if [ "$1" = '/home/couchdb/couchdb/bin/couchdb' ]; then
 
 	if [ "$COUCHDB_CERT_FILE" ] && [ "$COUCHDB_KEY_FILE" ] && [ "$COUCHDB_CACERT_FILE" ]; then
 		# Enable SSL
-		# printf "[daemons]\nhttpsd = {couch_httpd, start_link, [https]}\n\n" >> /home/couchdb/couchdb/etc/local.d/ssl.ini
+		printf "[daemons]\nhttpsd = {chttpd, start_link, [https]}\n\n" >> /home/couchdb/couchdb/etc/local.d/ssl.ini
 		printf "[ssl]\ncert_file = %s\nkey_file = %s\ncacert_file = %s\n" "$COUCHDB_CERT_FILE" "$COUCHDB_KEY_FILE" "$COUCHDB_CACERT_FILE" >> /home/couchdb/couchdb/etc/local.d/ssl.ini
+
+		# As per https://groups.google.com/forum/#!topic/couchdb-user-archive/cBrZ25DHHVA, due to bug
+		# https://issues.apache.org/jira/browse/COUCHDB-3162 we need the following lines. TODO: remove
+		# this in a later version of CouchDB 2.
+		printf "ciphers = undefined\ntls_versions = undefined\nsecure_renegotiate = undefined\n" >> /home/couchdb/couchdb/etc/local.d/ssl.ini
+
 		chown couchdb:couchdb /home/couchdb/couchdb/etc/local.d/ssl.ini
 	fi
 

@@ -3,9 +3,21 @@ FROM debian:jessie
 # Update distro
 RUN apt-get update -y && apt-get -y upgrade && apt-get -y dist-upgrade
 
+# Install Erlang 18 from source as the default version of Erlang 17 doesn't support CouchDB's SSL
+# features
+RUN apt-get install -y build-essential autoconf libncurses5-dev \
+                       openssl libssl-dev fop xsltproc unixodbc-dev \
+                       git wget \
+  && cd /usr/src \
+  && wget http://erlang.org/download/otp_src_18.3.tar.gz \
+  && tar zxvf otp_src_18.3.tar.gz \
+  && cd otp_src_18.3 \
+  && ./configure && make && make install
+
 # Install CouchDB from source
 RUN apt-get --no-install-recommends -y install \
-            build-essential pkg-config erlang \
+            # build-essential pkg-config erlang \
+            build-essential pkg-config \
             libicu-dev libmozjs185-dev libcurl4-openssl-dev \
             wget curl ca-certificates \
   && cd /usr/src \
@@ -55,7 +67,7 @@ RUN npm install -g docker-discover-tasks
 
 WORKDIR /home/couchdb/couchdb
 
-EXPOSE 5984 4369 9100-9200
+EXPOSE 5984 6984 4369 9100-9200
 
 VOLUME ["/home/couchdb/couchdb/data"]
 
