@@ -4,7 +4,7 @@ CouchDB as a docker swarm service
 TODO
 ---
 
-    docker swarm init --advertise-addr
+    docker swarm init --advertise-addr <ip-address>
 
     docker network create \
       --driver overlay \
