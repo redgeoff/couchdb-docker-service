@@ -73,8 +73,6 @@ WORKDIR /home/couchdb/couchdb
 
 EXPOSE 5984 6984 4369 9100-9200
 
-VOLUME ["/home/couchdb/couchdb/data"]
-
 COPY couchdb-process.sh /couchdb-process.sh
 COPY discover-process.sh /discover-process.sh
 COPY set-up-process.sh /set-up-process.sh
