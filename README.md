@@ -2,8 +2,7 @@
 CouchDB as a docker swarm service
 
 
-Set up
----
+## Set up
 
 Run this on your primary box to initialize the docker swarm manager:
 
@@ -20,12 +19,11 @@ Create the network so that the CouchDB nodes can communicate with each other:
       couchdb-network
 
 
-Create a service
----
+## Create a service
 
 The following examples assume that you have the directory /home/ubuntu/common on each of the boxes in the swarm. Moreover, /home/ubuntu/common/data is a directory that will be mounted as a volume so that your CouchDB data will be persisted across restarts.
 
-Example:
+### Example:
 
     docker service create --replicas 2 --name couchdb --network couchdb-network \
       --hostname="couchdb{{.Task.Slot}}" \
@@ -41,7 +39,7 @@ Example:
       -p 5984:5984 \
       redgeoff/couchdb-service
 
-Example with SSL:
+### Example with SSL:
 
 We assume /home/ubuntu/common/sql/mydomain.crt and /home/ubuntu/common/sql/mydomain.key are the certificate and private key for your SSL config.
 
@@ -62,7 +60,7 @@ We assume /home/ubuntu/common/sql/mydomain.crt and /home/ubuntu/common/sql/mydom
       -p 6984:6984 \
       redgeoff/couchdb-service
 
-Example with SSL and custom local.ini:
+### Example with SSL and custom local.ini:
 
 We assume /home/ubuntu/common/etc/local.ini contains any custom config, e.g.
 
@@ -97,13 +95,11 @@ Then run:
       redgeoff/couchdb-service
 
 
-To scale up
----
+## To scale up
 
     docker service scale couchdb=5
 
 
-To scale down
----
+## To scale down
 
 TODO: To scale down, you should spin up a new cluster and replicate all the data from the old cluster to the new cluster and then delete the old cluster. See http://docs.couchdb.org/en/2.0.0/cluster/sharding.html#reshard-no-preshard
