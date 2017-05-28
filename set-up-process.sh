@@ -14,6 +14,8 @@ if [ $TASK_SLOT -eq 1 ]; then
   missing=`curl -X GET http://$COUCHDB_USER:$COUCHDB_PASSWORD@couchdb1:5984/_users | grep 'not_found'`
 
   if [ "$missing" ]; then
+    # Sleep so that when we create the databases, they will be distributed over all our nodes
+    sleep 60
     curl -X PUT http://$COUCHDB_USER:$COUCHDB_PASSWORD@couchdb1:5984/_users
     curl -X PUT http://$COUCHDB_USER:$COUCHDB_PASSWORD@couchdb1:5984/_replicator
     curl -X PUT http://$COUCHDB_USER:$COUCHDB_PASSWORD@couchdb1:5984/_global_changes
