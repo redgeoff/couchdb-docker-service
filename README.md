@@ -36,6 +36,7 @@ The following examples assume that you have the directory /home/ubuntu/common on
       -e NODENAME="couchdb{{.Task.Slot}}" \
       -e SERVICE_NAME="{{.Service.Name}}" \
       -e TASK_SLOT="{{.Task.Slot}}" \
+      -e COUCHDB_DATA_DIR="/common/data/{{.Service.Name}}{{.Task.Slot}}" \
       -p 5984:5984 \
       redgeoff/couchdb-service
 
@@ -54,6 +55,7 @@ We assume /home/ubuntu/common/sql/mydomain.crt and /home/ubuntu/common/sql/mydom
       -e NODENAME="couchdb{{.Task.Slot}}" \
       -e SERVICE_NAME="{{.Service.Name}}" \
       -e TASK_SLOT="{{.Task.Slot}}" \
+      -e COUCHDB_DATA_DIR="/common/data/{{.Service.Name}}{{.Task.Slot}}" \
       -e COUCHDB_CERT_FILE="/common/ssl/mydomain.crt" \
       -e COUCHDB_KEY_FILE="/common/ssl/mydomain.key" \
       -e COUCHDB_CACERT_FILE="/common/ssl/mydomain.crt" \
@@ -86,10 +88,10 @@ Then run:
       -e NODENAME="couchdb{{.Task.Slot}}" \
       -e SERVICE_NAME="{{.Service.Name}}" \
       -e TASK_SLOT="{{.Task.Slot}}" \
+      -e COUCHDB_DATA_DIR="/common/data/{{.Service.Name}}{{.Task.Slot}}" \
       -e COUCHDB_CERT_FILE="/common/ssl/mydomain.co.crt" \
       -e COUCHDB_KEY_FILE="/common/ssl/mydomain.co.key" \
       -e COUCHDB_CACERT_FILE="/common/ssl/mydomain.co.crt" \
-      -e COUCHDB_DATA_DIR="/common/data/{{.Service.Name}}{{.Task.Slot}}" \
       -e COUCHDB_LOCAL_INI="/common/etc/local.ini" \
       -p 6984:6984 \
       redgeoff/couchdb-service
