@@ -42,7 +42,7 @@ The following examples assume that you have the directory /home/ubuntu/common on
 
 ### Example with SSL:
 
-We assume /home/ubuntu/common/sql/mydomain.crt and /home/ubuntu/common/sql/mydomain.key are the certificate and private key for your SSL config.
+We assume /home/ubuntu/common/ssl/mydomain.crt and /home/ubuntu/common/ssl/mydomain.key are the certificate and private key for your SSL config.
 
     docker service create --replicas 2 --name couchdb --network couchdb-network \
       --hostname="couchdb{{.Task.Slot}}" \
