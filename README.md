@@ -38,6 +38,7 @@ The following examples assume that you have the directory /home/ubuntu/common on
       -e TASK_SLOT="{{.Task.Slot}}" \
       -e COUCHDB_DATA_DIR="/common/data/{{.Service.Name}}{{.Task.Slot}}" \
       -p 5984:5984 \
+      --detach=true \
       redgeoff/couchdb-service
 
 ### Example with SSL:
@@ -60,6 +61,7 @@ We assume /home/ubuntu/common/ssl/mydomain.crt and /home/ubuntu/common/ssl/mydom
       -e COUCHDB_KEY_FILE="/common/ssl/mydomain.key" \
       -e COUCHDB_CACERT_FILE="/common/ssl/mydomain.crt" \
       -p 6984:6984 \
+      --detach=true \
       redgeoff/couchdb-service
 
 ### Example with SSL and custom local.ini:
@@ -94,6 +96,7 @@ Then run:
       -e COUCHDB_CACERT_FILE="/common/ssl/mydomain.co.crt" \
       -e COUCHDB_LOCAL_INI="/common/etc/local.ini" \
       -p 6984:6984 \
+      --detach=true \
       redgeoff/couchdb-service
 
 
