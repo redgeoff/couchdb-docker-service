@@ -1,6 +1,6 @@
 # Credit: this work is heavily based on https://github.com/apache/couchdb-docker/blob/master/2.0.0/Dockerfile
 
-# We use ubuntu instead of debian:jessie as we want Erlang >= 18 for Couchdb SSL support
+# We use ubuntu instead of debian:jessie as we want Erlang >= 18 for CouchDB SSL support
 FROM ubuntu
 
 MAINTAINER Geoff Cox redgeoff@gmail.com
@@ -17,15 +17,25 @@ RUN apt-get --no-install-recommends -y install \
             openssl \
             curl
 
+# Update package lists
+RUN apt-get update -y -qq
+
+# The certs need to be installed after we have updated the package lists
+RUN apt-get --no-install-recommends -y install \
+            ca-certificates
+
 # TODO: Installing nodejs adds almost 300 MB to our image! Even the official node image
 # (https://hub.docker.com/_/node/) is 666 MB. Is the best solution to eventually rewrite
 # docker-discover-tasks in lower level language like c++?
 #
 # Install nodejs
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - \
-  && apt-get install -y nodejs npm \
-  && npm install npm -g \
-  && ln -s /usr/bin/nodejs /usr/bin/node
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+  && apt-get install -y nodejs \
+  && npm install npm -g
+
+# Assuming the build process stays the same, you should be able to just change value of
+# COUCHDB_VERSION to upgrade to the latest source
+ENV COUCHDB_VERSION 2.1.0
 
 # Download CouchDB, build it and then clean up
 RUN buildDeps=" \
@@ -39,10 +49,10 @@ RUN buildDeps=" \
   " \
   && apt-get --no-install-recommends -y install $buildDeps \
   && cd /usr/src \
-  && wget http://www-eu.apache.org/dist/couchdb/source/2.0.0/apache-couchdb-2.0.0.tar.gz \
-  && tar xfz apache-couchdb-2.0.0.tar.gz \
-  && rm apache-couchdb-2.0.0.tar.gz \
-  && cd apache-couchdb-2.0.0 \
+  && wget http://www-us.apache.org/dist/couchdb/source/$COUCHDB_VERSION/apache-couchdb-$COUCHDB_VERSION.tar.gz \
+  && tar xfz apache-couchdb-$COUCHDB_VERSION.tar.gz \
+  && rm apache-couchdb-$COUCHDB_VERSION.tar.gz \
+  && cd apache-couchdb-$COUCHDB_VERSION \
   && ./configure \
   && make release \
   && adduser --system \
@@ -51,10 +61,7 @@ RUN buildDeps=" \
              "CouchDB Administrator" couchdb \
   && mv ./rel/couchdb /home/couchdb \
   && cd ../ \
-  && rm -rf apache-couchdb-2.0.0 \
-  && chown -R couchdb:couchdb /home/couchdb/couchdb \
-  && find /home/couchdb/couchdb -type d -exec chmod 0770 {} \; \
-  && chmod 0644 /home/couchdb/couchdb/etc/* \
+  && rm -rf apache-couchdb-$COUCHDB_VERSION \
   && apt-get purge -y --auto-remove $buildDeps \
   && rm -rf /var/lib/apt/lists/*
 
@@ -63,7 +70,10 @@ COPY local.ini /home/couchdb/couchdb/etc/local.d/
 COPY vm.args /home/couchdb/couchdb/etc/
 
 # Set up directories and permissions
-RUN mkdir /home/couchdb/couchdb/data /home/couchdb/couchdb/etc/default.d \
+RUN mkdir -p /home/couchdb/couchdb/data /home/couchdb/couchdb/etc/default.d \
+  && find /home/couchdb/couchdb -type d -exec chmod 0770 {} \; \
+  && chmod 0644 /home/couchdb/couchdb/etc/* \
+  && chmod 775 /home/couchdb/couchdb/etc/*.d \
   && chown -R couchdb:couchdb /home/couchdb/couchdb/
 
 # docker-discover-tasks allows the nodes to discover each other
