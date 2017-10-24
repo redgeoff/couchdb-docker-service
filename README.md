@@ -82,6 +82,7 @@ Then run:
     docker service create --replicas 2 --name couchdb --network couchdb-network \
       --hostname="couchdb{{.Task.Slot}}" \
       --mount type=bind,source=/home/ubuntu/common,destination=/common \
+      --mount type=bind,source=/home/ubuntu/common/etc/local.ini,destination=/home/couchdb/couchdb/etc/local.d/local.ini \
       -e COUCHDB_COOKIE="mycookie" \
       -e COUCHDB_USER="admin" \
       -e COUCHDB_PASSWORD="admin" \
@@ -94,7 +95,6 @@ Then run:
       -e COUCHDB_CERT_FILE="/common/ssl/mydomain.co.crt" \
       -e COUCHDB_KEY_FILE="/common/ssl/mydomain.co.key" \
       -e COUCHDB_CACERT_FILE="/common/ssl/mydomain.co.crt" \
-      -e COUCHDB_LOCAL_INI="/common/etc/local.ini" \
       -p 6984:6984 \
       --detach=true \
       redgeoff/couchdb-service
