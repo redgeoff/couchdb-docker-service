@@ -112,5 +112,5 @@ TODO: To scale down, you should spin up a new cluster and replicate all the data
 
 ## Upgrade to latest image
 
-$ docker pull redgeoff/couchdb-service
-$ docker service update --detach=true --image redgeoff/couchdb-service couchdb
+    $ docker pull redgeoff/couchdb-service
+    $ docker service update --detach=true --image redgeoff/couchdb-service couchdb
