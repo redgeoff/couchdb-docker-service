@@ -108,3 +108,9 @@ Then run:
 ## To scale down
 
 TODO: To scale down, you should spin up a new cluster and replicate all the data from the old cluster to the new cluster and then delete the old cluster. See http://docs.couchdb.org/en/2.0.0/cluster/sharding.html#reshard-no-preshard
+
+
+## Upgrade to latest image
+
+$ docker pull redgeoff/couchdb-service
+$ docker service update --detach=true --image redgeoff/couchdb-service couchdb
