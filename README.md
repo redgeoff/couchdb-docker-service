@@ -23,6 +23,14 @@ Create the network so that the CouchDB nodes can communicate with each other:
 
 The following examples assume that you have the directory /home/ubuntu/common on each of the boxes in the swarm. Moreover, /home/ubuntu/common/data is a directory that will be mounted as a volume so that your CouchDB data will be persisted across restarts.
 
+### Hashing a password
+All your CouchDB nodes need the same hashed password so that user sessions can work seamlessly between nodes. You can use the `couch-hash-pwd` utility to generate this hash. For example, if your password is `admin` you can use:
+    
+    $ sudo npm install -g couch-hash-pwd
+    $ couchdb-hash-pwd -p admin
+    
+You'll then want to use the outputted value as the value of `COUCHDB_HASHED_PASSWORD` 
+
 ### Example:
 
     docker service create --replicas 2 --name couchdb --network couchdb-network \
@@ -40,6 +48,8 @@ The following examples assume that you have the directory /home/ubuntu/common on
       -p 5984:5984 \
       --detach=true \
       redgeoff/couchdb-service
+
+`COUCHDB_COOKIE` and `COUCHDB_SECRET` should be some random string of characters--you may want to use a password generator to generate these values.
 
 ### Example with SSL:
 
